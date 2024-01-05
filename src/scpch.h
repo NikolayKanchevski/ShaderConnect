@@ -14,10 +14,21 @@
         #include <fstream>
         #include <exception>
         #include <filesystem>
-        #if defined _MSC_VER
-            #include <direct.h>
-        #elif defined __GNUC__
-            #include <sys/stat.h>
+    #pragma endregion
+
+    #pragma region Platform Detection
+        #define SC_PLATFORM_WINDOWS 0
+        #define SC_PLATFORM_LINUX 0
+        #define SC_PLATFORM_macOS 0
+        #if _WIN32 || _WIN64
+            #undef SC_PLATFORM_WINDOWS
+            #define SC_PLATFORM_WINDOWS 1
+        #elif __APPLE__ || __MACH__
+            #undef SC_PLATFORM_macOS
+            #define SC_PLATFORM_macOS 1
+        #elif __linux__
+            #undef SC_PLATFORM_LINUX
+            #define SC_PLATFORM_LINUX 1
         #endif
     #pragma endregion
 

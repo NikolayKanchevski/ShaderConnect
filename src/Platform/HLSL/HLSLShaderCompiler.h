@@ -12,8 +12,14 @@ namespace ShaderConnect
     class HLSLShaderCompiler final : public ShaderCompiler
     {
     public:
+        /* --- CONSTRUCTORS --- */
+        HLSLShaderCompiler() = default;
+
         /* --- POLLING METHODS --- */
-        void CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderFilePath) override;
+        std::filesystem::path CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderDirectory);
+
+        /* --- DESTRUCTOR --- */
+        ~HLSLShaderCompiler() = default;
 
     };
 

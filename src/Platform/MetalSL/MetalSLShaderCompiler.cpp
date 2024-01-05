@@ -2,7 +2,7 @@
 // Created by Nikolay Kanchevski on 26.12.23.
 //
 
-#include "macOSMSLShaderCompiler.h"
+#include "MetalSLShaderCompiler.h"
 
 #include <spirv_msl.hpp>
 
@@ -11,11 +11,23 @@ namespace ShaderConnect
 
     /* --- POLLING METHODS --- */
 
-    void macOSMSLShaderCompiler::CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderFilePath)
+    std::filesystem::path MetalSLShaderCompiler::CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderFileDirectory)
     {
         // Set up compiler options
         spirv_cross::CompilerMSL::Options options = { };
-        options.platform = spirv_cross::CompilerMSL::Options::macOS;
+        switch (targetPlatform)
+        {
+            case MetalSLTargetPlatform::macOS:
+            {
+                options.platform = spirv_cross::CompilerMSL::Options::macOS;
+                break;
+            }
+            case MetalSLTargetPlatform::iOS:
+            {
+                options.platform = spirv_cross::CompilerMSL::Options::iOS;
+                break;
+            }
+        }
         options.msl_version = spirv_cross::CompilerMSL::Options::make_msl_version(2, 0);
         options.texel_buffer_texture_width = 4096;
         options.r32ui_linear_texture_alignment = 4;
@@ -83,9 +95,11 @@ namespace ShaderConnect
         compiler.set_msl_options(options);
 
         // Compile shader
-        const std::string mslCode = compiler.compile();
-        File::WriteToFile(outputShaderFilePath.string() + ".macos.msl", mslCode.data(), mslCode.size() * sizeof(char), true, true);
+        const std::string metalSLCode = compiler.compile();
+        const std::filesystem::path outputShaderFilePath = outputShaderFileDirectory / (std::string("shader") + (targetPlatform == MetalSLTargetPlatform::macOS ? ".macos" : ".ios") + ".metal");
+        File::WriteToFile(outputShaderFilePath, metalSLCode.data(), metalSLCode.size() * sizeof(char), true, true);
 
+        return outputShaderFilePath;
     }
 
 }

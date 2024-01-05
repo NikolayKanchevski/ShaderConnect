@@ -11,17 +11,18 @@ namespace ShaderConnect
     {
     public:
         /* --- POLLING METHODS --- */
-        bool static CreateDirectory(const std::filesystem::path &directoryPath);
-        bool static CreateDirectoriesToPath(const std::filesystem::path &path);
+        static bool CreateFile(const std::filesystem::path &filePath);
+        static bool DeleteFile(const std::filesystem::path &filePath);
 
-        bool static CreateFile(const std::filesystem::path &filePath);
-        bool static WriteToFile(const std::filesystem::path &filePath, const char* data, uint64 dataSize, bool overwrite, bool createFile = true);
-
-        /* --- GETTER METHODS --- */
-        [[nodiscard]] static bool DirectoryExists(const std::filesystem::path &directoryPath);
-        [[nodiscard]] static bool FileExists(const std::filesystem::path &filePath);
+        static bool CreateDirectory(const std::filesystem::path &directoryPath);
+        static bool DeleteDirectory(const std::filesystem::path &directoryPath);
 
         [[nodiscard]] static std::vector<char> ReadFile(const std::filesystem::path &filePath);
+        static bool WriteToFile(const std::filesystem::path &filePath, const char* data, uint64 dataSize, bool overwrite, bool createFile = true);
+
+        /* --- GETTER METHODS --- */
+        [[nodiscard]] static bool FileExists(const std::filesystem::path &filePath);
+        [[nodiscard]] static bool DirectoryExists(const std::filesystem::path &directoryPath);
 
     };
 

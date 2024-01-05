@@ -12,8 +12,14 @@ namespace ShaderConnect
     class SPIRVShaderCompiler final : public ShaderCompiler
     {
     public:
+        /* --- CONSTRUCTORS --- */
+        SPIRVShaderCompiler() = default;
+
         /* --- POLLING METHODS --- */
-        void CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderFilePath) override;
+        std::filesystem::path CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderDirectory);
+
+        /* --- DESTRUCTOR --- */
+        ~SPIRVShaderCompiler() = default;
 
     };
 

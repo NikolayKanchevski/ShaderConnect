@@ -4,15 +4,42 @@ project(ShaderConnect)
 set(CMAKE_CXX_STANDARD 17)
 
 # Create executable
-add_executable(${PROJECT_NAME} main.cpp src/ShaderType.h src/InputShaderLanguage.h src/CrossShaderCompiler.h src/CrossShaderCompiler.cpp src/OutputShaderLanguage.h src/ShaderCompiler.h src/File.cpp src/File.h src/Platform/GLSL/GLSLShaderCompiler.cpp src/Platform/GLSL/GLSLShaderCompiler.h src/Platform/ESSL/ESSLShaderCompiler.cpp src/Platform/ESSL/ESSLShaderCompiler.h src/Platform/HLSL/HLSLShaderCompiler.cpp src/Platform/HLSL/HLSLShaderCompiler.h src/Platform/macOS-MSL/macOSMSLShaderCompiler.cpp src/Platform/macOS-MSL/macOSMSLShaderCompiler.h src/Platform/iOS-MSL/iOSMSLShaderCompiler.cpp src/Platform/iOS-MSL/iOSMSLShaderCompiler.h src/Platform/SPIR-V/SPIRVShaderCompiler.cpp src/Platform/SPIR-V/SPIRVShaderCompiler.h)
+add_executable(${PROJECT_NAME}
+    main.cpp
+
+    src/ShaderType.h
+    src/InputShaderLanguage.h
+    src/OutputShaderLanguage.h
+    src/File.cpp
+    src/File.h
+
+    src/ShaderCompiler.h
+    src/CrossShaderCompiler.h
+    src/CrossShaderCompiler.cpp
+
+    src/Platform/GLSL/GLSLShaderCompiler.cpp
+    src/Platform/GLSL/GLSLShaderCompiler.h
+
+    src/Platform/HLSL/HLSLShaderCompiler.cpp
+    src/Platform/HLSL/HLSLShaderCompiler.h
+
+    src/Platform/MetalSL/MetalSLShaderCompiler.cpp
+    src/Platform/MetalSL/MetalSLShaderCompiler.h
+
+    src/Platform/MetalSL/MetalLibShaderCompiler.cpp
+    src/Platform/MetalSL/MetalLibShaderCompiler.h
+
+    src/Platform/SPIR-V/SPIRVShaderCompiler.cpp
+    src/Platform/SPIR-V/SPIRVShaderCompiler.h
+)
 
 # Include shaderc dependencies
+set(BUILD_TESTS OFF)
+add_subdirectory(vendor/SPIRV-Headers)
 set(SPIRV_WERROR OFF)
 add_subdirectory(vendor/SPIRV-Tools)
 set(GLSLANG_TESTS OFF)
 add_subdirectory(vendor/glslang)
-set(BUILD_TESTS OFF)
-add_subdirectory(vendor/SPIRV-Headers)
 
 # Link shaderc
 set(SHADERC_SKIP_TESTS ON)

@@ -17,8 +17,9 @@ namespace ShaderConnect
         /* --- CONSTRUCTORS --- */
         ShaderCompiler() = default;
 
-        /* --- POLLING METHODS --- */
-        virtual void CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderFilePath) = 0;
+        /* --- OPERATORS --- */
+        ShaderCompiler(const ShaderCompiler&) = delete;
+        ShaderCompiler &operator=(const ShaderCompiler&) = delete;
 
         /* --- DESTRUCTOR --- */
         virtual ~ShaderCompiler() = default;

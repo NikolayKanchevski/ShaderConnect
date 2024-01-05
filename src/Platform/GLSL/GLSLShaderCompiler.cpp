@@ -11,12 +11,12 @@ namespace ShaderConnect
 
     /* --- POLLING METHODS --- */
 
-    void GLSLShaderCompiler::CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderFilePath)
+    std::filesystem::path GLSLShaderCompiler::CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderDirectory)
     {
         // Set up compiler options
         spirv_cross::CompilerGLSL::Options options = { };
         options.version = 450;
-        options.es = false;
+        options.es = targetPlatform == GLSLTargetPlatform::ESSL;
         options.vulkan_semantics = false;
         options.emit_push_constant_as_uniform_buffer = true;
         options.enable_storage_image_qualifier_deduction = true;
@@ -36,7 +36,10 @@ namespace ShaderConnect
 
         // Compile shader
         const std::string glslCode = compiler.compile();
-        File::WriteToFile(outputShaderFilePath.string() + ".glsl", glslCode.data(), glslCode.size() * sizeof(char), true, true);
+        const std::filesystem::path outputShaderFilePath = outputShaderDirectory / (std::string("shader") + (targetPlatform == GLSLTargetPlatform::GLSL ? ".glsl" : ".essl") + ".metal");
+        File::WriteToFile(outputShaderFilePath, glslCode.data(), glslCode.size() * sizeof(char), true, true);
+
+        return outputShaderFilePath;
     }
 
 }

@@ -13,19 +13,25 @@ namespace ShaderConnect
         GLSL,
         ESSL,
         HLSL,
-        macOSMSL,
-        iOSMSL,
+        macOSMetalSL,
+        iOSMetalSL,
+        macOSMetalLib,
+        iOSMetalLib,
+        iOSSimulatorMetalLib,
         SPIRV
     };
 
     static OutputShaderLanguage StringToOutputShaderLanguageLanguage(const char* string)
     {
-        if (strcmp(string, "glsl") == 0)           return OutputShaderLanguage::GLSL;
-        if (strcmp(string, "essl") == 0)           return OutputShaderLanguage::ESSL;
-        if (strcmp(string, "hlsl") == 0)           return OutputShaderLanguage::HLSL;
-        if (strcmp(string, "macos-msl") == 0)      return OutputShaderLanguage::macOSMSL;
-        if (strcmp(string, "ios-msl") == 0)        return OutputShaderLanguage::iOSMSL;
-        if (strcmp(string, "spir-v") == 0)         return OutputShaderLanguage::SPIRV;
+        if (strcmp(string, "glsl") == 0)                        return OutputShaderLanguage::GLSL;
+        if (strcmp(string, "essl") == 0)                        return OutputShaderLanguage::ESSL;
+        if (strcmp(string, "hlsl") == 0)                        return OutputShaderLanguage::HLSL;
+        if (strcmp(string, "macos-metalsl") == 0)               return OutputShaderLanguage::macOSMetalSL;
+        if (strcmp(string, "ios-metalsl") == 0)                 return OutputShaderLanguage::iOSMetalSL;
+        if (strcmp(string, "macos-metallib") == 0)              return OutputShaderLanguage::macOSMetalLib;
+        if (strcmp(string, "ios-metallib") == 0)                return OutputShaderLanguage::iOSMetalLib;
+        if (strcmp(string, "ios-simulator-metallib") == 0)      return OutputShaderLanguage::iOSSimulatorMetalLib;
+        if (strcmp(string, "spir-v") == 0)                      return OutputShaderLanguage::SPIRV;
         return OutputShaderLanguage::Undefined;
     }
 

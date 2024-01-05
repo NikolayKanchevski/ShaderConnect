@@ -5,10 +5,9 @@
 #include "CrossShaderCompiler.h"
 
 #include "Platform/GLSL/GLSLShaderCompiler.h"
-#include "Platform/ESSL/ESSLShaderCompiler.h"
 #include "Platform/HLSL/HLSLShaderCompiler.h"
-#include "Platform/macOS-MSL/macOSMSLShaderCompiler.h"
-#include "Platform/iOS-MSL/iOSMSLShaderCompiler.h"
+#include "Platform/MetalSL/MetalSLShaderCompiler.h"
+#include "Platform/MetalSL/MetalLibShaderCompiler.h"
 #include "Platform/SPIR-V/SPIRVShaderCompiler.h"
 
 namespace ShaderConnect
@@ -16,11 +15,11 @@ namespace ShaderConnect
 
     /* --- CONSTRUCTORS --- */
 
-    CrossShaderCompiler::CrossShaderCompiler(const ShaderCrossCompilerCreateInfo &createInfo)
-        : inputShaderName(createInfo.inputShaderFilePath.stem().string()), inputShaderType(createInfo.inputShaderType)
+    CrossShaderCompiler::CrossShaderCompiler(const InputShaderLanguage inputShaderLanguage, const ShaderType inputShaderType, const std::filesystem::path &inputShaderFilePath)
+        : inputShaderName(inputShaderFilePath.stem().string()), inputShaderType(inputShaderType)
     {
-        if (createInfo.inputShaderLanguage == InputShaderLanguage::Undefined) throw std::runtime_error("Input shader's language must not be InputShaderLanguage::Undefined!");
-        if (createInfo.inputShaderType == ShaderType::Undefined) throw std::runtime_error("Input shader's type must not be ShaderType::Undefined");
+        if (inputShaderLanguage == InputShaderLanguage::Undefined) throw std::runtime_error("Input shader's language must not be InputShaderLanguage::Undefined!");
+        if (inputShaderType == ShaderType::Undefined) throw std::runtime_error("Input shader's type must not be ShaderType::Undefined");
 
         // Create shaderc compiler and options
         const shaderc::Compiler compiler = { };
@@ -30,9 +29,9 @@ namespace ShaderConnect
         #if !defined(NDEBUG)
             compileOptions.SetWarningsAsErrors();
         #endif
-        compileOptions.SetIncluder(std::make_unique<Includer>(createInfo.inputShaderFilePath));
+        compileOptions.SetIncluder(std::make_unique<Includer>(inputShaderFilePath));
         compileOptions.SetOptimizationLevel(shaderc_optimization_level_performance);
-        switch (createInfo.inputShaderLanguage)
+        switch (inputShaderLanguage)
         {
             case InputShaderLanguage::GLSL: { compileOptions.SetSourceLanguage(shaderc_source_language_glsl); compileOptions.SetForcedVersionProfile(450, shaderc_profile_none); break; }
             case InputShaderLanguage::HLSL: { compileOptions.SetSourceLanguage(shaderc_source_language_hlsl); break; }
@@ -52,11 +51,11 @@ namespace ShaderConnect
         }
 
         // Compile shader
-        const std::vector<char> inputShaderBuffer = File::ReadFile(createInfo.inputShaderFilePath);
-        const shaderc::SpvCompilationResult spirvResult = compiler.CompileGlslToSpv(inputShaderBuffer.data(), inputShaderBuffer.size(), shaderKind, createInfo.inputShaderFilePath.stem().c_str(), compileOptions);
+        const std::vector<char> inputShaderBuffer = File::ReadFile(inputShaderFilePath);
+        const shaderc::SpvCompilationResult spirvResult = compiler.CompileGlslToSpv(inputShaderBuffer.data(), inputShaderBuffer.size(), shaderKind, inputShaderFilePath.stem().c_str(), compileOptions);
         if (spirvResult.GetCompilationStatus() != shaderc_compilation_status_success)
         {
-            printf("An error occurred during SPIR-V generation of shader [%s]: %s\n", createInfo.inputShaderFilePath.filename().string().c_str(), spirvResult.GetErrorMessage().c_str());
+            printf("An error occurred during SPIR-V generation of shader [%s]: %s\n", inputShaderFilePath.filename().string().c_str(), spirvResult.GetErrorMessage().c_str());
             throw std::runtime_error("SPIR-V generation failed!");
         }
 
@@ -66,9 +65,9 @@ namespace ShaderConnect
 
     /* --- POLLING METHODS --- */
 
-    void CrossShaderCompiler::Compile(const OutputShaderLanguage outputShaderLanguage, const std::filesystem::path &outputShaderDirectory) const
+    std::filesystem::path CrossShaderCompiler::Compile(const OutputShaderLanguage outputShaderLanguage, const std::filesystem::path &outputShaderDirectory) const
     {
-        const std::filesystem::path shaderOutputPath = outputShaderDirectory / inputShaderName;
+        std::filesystem::path outputShaderFilePath;
         switch (outputShaderLanguage)
         {
             case OutputShaderLanguage::Undefined:
@@ -78,35 +77,64 @@ namespace ShaderConnect
             }
             case OutputShaderLanguage::GLSL:
             {
-                GLSLShaderCompiler().CompileShader(inputShaderSpirvBuffer, shaderOutputPath);
+                outputShaderFilePath = GLSLShaderCompiler(GLSLTargetPlatform::GLSL).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 break;
             }
             case OutputShaderLanguage::ESSL:
             {
-                ESSLShaderCompiler().CompileShader(inputShaderSpirvBuffer, shaderOutputPath);
+                outputShaderFilePath = GLSLShaderCompiler(GLSLTargetPlatform::ESSL).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 break;
             }
             case OutputShaderLanguage::HLSL:
             {
-                HLSLShaderCompiler().CompileShader(inputShaderSpirvBuffer, shaderOutputPath);
+                outputShaderFilePath = HLSLShaderCompiler().CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 break;
             }
-            case OutputShaderLanguage::macOSMSL:
+            case OutputShaderLanguage::macOSMetalSL:
             {
-                macOSMSLShaderCompiler().CompileShader(inputShaderSpirvBuffer, shaderOutputPath);
+                outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::macOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 break;
             }
-            case OutputShaderLanguage::iOSMSL:
+            case OutputShaderLanguage::iOSMetalSL:
             {
-                iOSMSLShaderCompiler().CompileShader(inputShaderSpirvBuffer, shaderOutputPath);
+                outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::iOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
+                break;
+            }
+            case OutputShaderLanguage::macOSMetalLib:
+            {
+                #if !SC_PLATFORM_macOS
+                    throw std::runtime_error("Cannot cross-compile shaders into Metal libraries (.metallib), unless you are on macOS!");
+                #endif
+                outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::macOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
+                outputShaderFilePath = MetalLibShaderCompiler(MetalLibTargetPlatform::macOS).CompileShader(outputShaderFilePath, outputShaderDirectory);
+                break;
+            }
+            case OutputShaderLanguage::iOSMetalLib:
+            {
+                #if !SC_PLATFORM_macOS
+                    throw std::runtime_error("Cannot cross-compile shaders into Metal libraries (.metallib), unless you are on macOS!");
+                #endif
+                outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::iOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
+                outputShaderFilePath = MetalLibShaderCompiler(MetalLibTargetPlatform::iOS).CompileShader(outputShaderFilePath, outputShaderDirectory);
+                break;
+            }
+            case OutputShaderLanguage::iOSSimulatorMetalLib:
+            {
+                #if !SC_PLATFORM_macOS
+                    throw std::runtime_error("Cannot cross-compile shaders into Metal libraries (.metallib), unless you are on macOS!");
+                #endif
+                outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::iOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
+                outputShaderFilePath = MetalLibShaderCompiler(MetalLibTargetPlatform::iOSSimulator).CompileShader(outputShaderFilePath, outputShaderDirectory);
                 break;
             }
             case OutputShaderLanguage::SPIRV:
             {
-                SPIRVShaderCompiler().CompileShader(inputShaderSpirvBuffer, shaderOutputPath);
+                outputShaderFilePath = SPIRVShaderCompiler().CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 break;
             }
         }
+
+        return outputShaderFilePath;
     }
 
     /* --- CONSTRUCTORS --- */

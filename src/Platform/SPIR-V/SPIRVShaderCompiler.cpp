@@ -9,9 +9,11 @@ namespace ShaderConnect
 
     /* --- POLLING METHODS --- */
 
-    void SPIRVShaderCompiler::CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderFilePath)
+    std::filesystem::path SPIRVShaderCompiler::CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderDirectory)
     {
-        File::WriteToFile(outputShaderFilePath.string() + ".spv", reinterpret_cast<const char*>(spirvBuffer.data()), spirvBuffer.size() * sizeof(uint32), true, true);
+        const std::filesystem::path outputShaderFilePath = outputShaderDirectory / "shader.spv";
+        File::WriteToFile(outputShaderFilePath, reinterpret_cast<const char*>(spirvBuffer.data()), spirvBuffer.size() * sizeof(uint32), true, true);
+        return outputShaderFilePath;
     }
 
 }

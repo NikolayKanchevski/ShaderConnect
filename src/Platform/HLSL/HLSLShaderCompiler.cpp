@@ -11,7 +11,7 @@ namespace ShaderConnect
 
     /* --- POLLING METHODS --- */
 
-    void HLSLShaderCompiler::CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderFilePath)
+    std::filesystem::path HLSLShaderCompiler::CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderDirectory)
     {
         // Set up compiler options
         spirv_cross::CompilerHLSL::Options options = { };
@@ -31,7 +31,10 @@ namespace ShaderConnect
 
         // Compile shader
         const std::string hlslCode = compiler.compile();
-        File::WriteToFile(outputShaderFilePath.string() + ".hlsl", hlslCode.data(), hlslCode.size() * sizeof(char), true, true);
+        const std::filesystem::path outputShaderFilePath = outputShaderDirectory / "shader.hlsl";
+        File::WriteToFile(outputShaderFilePath, hlslCode.data(), hlslCode.size() * sizeof(char), true, true);
+
+        return outputShaderFilePath;
     }
 
 }

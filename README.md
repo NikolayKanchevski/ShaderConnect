@@ -1,21 +1,32 @@
 # Shader Connect
 
-Shader Connect is a lightweight [C++17](https://en.cppreference.com/w/cpp/17) command-line tool, aimed at seamlessly converting [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) shader code to highly-optimized [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)/[MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)/[SPIR-V](www.khronos.org/spir/). It supports **Windows**, **macOS**, **Linux**, **Android** and **iOS**.
-
-<br>
+Shader Connect is a lightweight [C++17](https://en.cppreference.com/w/cpp/17) command-line tool, aimed at seamlessly converting [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) shader code to highly-optimized [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)/[MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)/[MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc)/[SPIR-V](www.khronos.org/spir/). It is supported on **Windows**, **macOS** and **Linux**, and can produce shaders,
+which are compatible with any operating system, as long as their corresponding graphics API has support for them. 
 
 ## 🧰 Usage
 
-Once you have the compiled binary (either after you have built it yourself or downloaded it from GitHub), you can run it just as any other command-line application.
-
-<br>
+Once you have the compiled binary (either after you have built it yourself or downloaded it from [GitHub](https://github.com/NikichaTV/ShaderConnect)), you can run it just as any other command-line application.
 
 The arguments it takes in are as such, respectively:
 * `<input_shader_file_path>` - absolute path to the input shader file (it does not have to be of a specific extension, as you manually specify its language) 
-* `<input_shader_language>` - language of the input shader file (can be one of the following: `glsl` [for [OpenGL](https://www.khronos.org/opengl/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)], `hlsl` [for [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)])
-* `<input_shader_type>` - what [type/stage](https://www.khronos.org/opengl/wiki/Shader#Stages) the input shader is of (can be one of the following: `vertex`, `fragment` [also known as pixel shader] or `compute`, and same will be used for output shader)
-* `<output_shader_directory_path>` - absolute path to the output shader **directory**.
-* `<output_shader_language>` - language of the output shader file (can be one of the following: `spir-v` [for [SPIR-V](www.khronos.org/spir/)], `glsl` [for [OpenGL](https://www.khronos.org/opengl/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)], `essl` [[OpenGLES](https://www.khronos.org/opengles/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)], `hlsl` [for [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)], `macos-msl` [for macOS [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)] or `ios-msl` [for iOS [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)])
+* `<input_shader_language>` - language of the input shader file. Can be one of the following:
+  * `glsl` [for [OpenGL](https://www.khronos.org/opengl/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)]
+  * `hlsl` [for [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)])
+* `<input_shader_type>` - what [type/stage](https://www.khronos.org/opengl/wiki/Shader#Stages) the input shader is of. Can be one of the following: 
+  * `vertex`
+  * `fragment` [also known as [pixel shader](https://www.nvidia.com/en-us/drivers/feature-pixelshader/)]
+  * `compute`
+* `<output_shader_directory_path>` - absolute path to the output shader *directory, not file*.
+* `<output_shader_language>` - language of the output shader file. Can be one of the following: 
+  * `spir-v` [for [SPIR-V](www.khronos.org/spir/) binary]
+  * `glsl` [for [OpenGL](https://www.khronos.org/opengl/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) source]
+  * `essl` [[OpenGLES](https://www.khronos.org/opengles/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) source]
+  * `hlsl` [for [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) source file]
+  * `macos-metalsl` [for macOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) source file]
+  * `ios-metalsl` [for iOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)] source file)
+  * `macos-metallib` [for macOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary, *supported on macOS only*)
+  * `ios-metallib` [for iOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary, *supported on macOS only*)
+  * `ios-simulator-metallib` [for iOS simulator ([Xcode](https://developer.apple.com/xcode/)'s emulator) [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary, *supported on macOS only*)
 
 <br>
 
@@ -24,37 +35,29 @@ The arguments it takes in are as such, respectively:
 $ ShaderConnect.exe C:\Users\MyUser\Shaders\input_shader.vert glsl vertex C:\Users\MyUser\Shaders\Generated\ spir-v   
 ```
 
-After running the command, if all the arguments are valid, you are going to see a new shader file with the same name, but with the appropriate extension in the `<output_shader_directory_path>` directory. 
+After running the command, if all the arguments are valid, you are going to see a new shader file in the specified`<output_shader_directory_path>` directory. 
 
 <br>
 
 ## 🤔 ShaderConnect
 
-<br>
-
 #### Why was  it developed?
-Being the lead developer of the [Sierra Engine](https://github.com/NikichaTV/SierraEngine) (a cross-platform *multi-API* rendering engine), I quickly found myself needing to write at least 4 versions of every shader I had
-to satisfy the requirements of the various graphics APIs the engine was utilizing. For example, [Vulkan](https://www.vulkan.org) works with [SPIR-V](www.khronos.org/spir/) binary shaders, [DirectX](https://developer.nvidia.com/directx) uses intermediate format shaders (compiled from [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)), [Metal](https://developer.apple.com/metal/) needs C++-like [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)
-text shaders, and [OpenGL](https://www.khronos.org/opengl/) too uses plain text shaders, but in the [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) format.
+Being the lead developer of the [Sierra Engine](https://github.com/NikichaTV/SierraEngine) (a cross-platform *multi-API* rendering engine), I quickly found myself needing to write numerous versions of every shader I had
+just to satisfy the requirements of the various graphics APIs the engine was built to seamlessly support. For example, [Vulkan](https://www.vulkan.org) works with [SPIR-V](www.khronos.org/spir/) binary shaders, [DirectX](https://developer.nvidia.com/directx) uses intermediate format shaders (compiled from [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)), [Metal](https://developer.apple.com/metal/) needs C++-like [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)
+text shaders, which are ultimately compiled down to binary, and [OpenGL](https://www.khronos.org/opengl/) uses plain [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) text shaders.
 
-So, I could either keep on manually writing shaders in all the formats I just mentioned (possibly even more in the future, provided that support for new API was to come), or I could try and convert a single shader format I
-write to the rest, and, given that you are checking out this repository, you too are most probably looking for a solution to that same problem. Well, look no more!
-
-<br>
+So, I could either keep on manually writing shaders in all the formats I just mentioned (possibly even more in the future, provided that support for new API was to come), or I could find me a way to convert the single shader format I
+write in to the rest, and, given that you are checking out this repository, you too are most probably looking for a solution to that same problem... or are simply too lazy to learn a new shading language. Either way, look no more!
 
 #### What *exactly* is ShaderConnect?
-Well, let`s start with what it is not - surprisingly, ShaderConnect is certainly not a new **compiler**. It is rather a codebase, which makes use of one or more already-existing shader compilers and converters.
-All I have done is really just connect these together to allow for the "cross-shader compilation".
+It is command line tool, which glues together one or more already-existing shader compilers and converters, which allows for the "cross compilation". It is *not* a compiler in of itself by any means.
 
-The way it works is fairly easy (on my part at least, I cannot speak on behalf of the people behind the actual
-tools): the program takes in a path to a shader (must be in either [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) or [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) format), which is then compiled down to [SPIR-V](www.khronos.org/spir/) binary using Shaderc. Finally, thanks to [SPIR-V](www.khronos.org/spir/) Cross, the [SPIR-V](www.khronos.org/spir/) binary gets translated into
-the desired output language.
+The way it works is fairly simple: the program takes in a path to a shader, which must be in either [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) or [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) format, this shader is then compiled down to [SPIR-V](www.khronos.org/spir/) binary using [Shaderc](https://github.com/google/shaderc). Finally, thanks to [SPIR-V Cross](https://github.com/KhronosGroup/SPIRV-Cross), the binary gets translated into
+a source file of the desired output language.
 
 <br>
 
 ## 📝 Test Input
-
-<br>
 
 We will be using the following [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) shader as a sample to convert to all supported output shading languages:
 ```glsl
@@ -81,8 +84,6 @@ void main()
 }
 ```
 
-<br>
-
 #### Generated [ESSL](https://www.khronos.org/files/opengles_shading_language.pdf):
 ```glsl
 #version 450 es
@@ -99,8 +100,6 @@ void main()
 }
 ```
 It is pretty much the same, however, if there are any [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)-only features, they will be emulated using [ESSL](https://www.khronos.org/files/opengles_shading_language.pdf) core features if possible.
-
-<br>
 
 ### Generated [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/):
 ```c++
@@ -140,9 +139,7 @@ It is pretty much the same, however, if there are any [GLSL](https://www.khronos
 ```
 Perfect!
 
-<br>
-
-### Generated [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) (iOS & macOS)
+### Generated [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) (iOS & macOS)
 ```c++
 #include <metal_stdlib>
 #include <simd/simd.h>
@@ -166,10 +163,8 @@ vertex main0_out main0(uint gl_VertexIndex [[vertex_id]])
     return out;
 }
 ```
-In this case both the iOS and macOS [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) are identical, but, just like with [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf), if iOS [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) lacks some feature present in the macOS version, it will be emulated with another core features where possible.
+In this case both the iOS and macOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) are identical, but, just like with [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf), if iOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) lacks some feature present in the macOS version, it will be emulated with another core features where possible.
 Specifying the correct target platform also allows for better optimization.
-
-<br>
 
 ### Generated [SPIR-V](www.khronos.org/spir/)
 While displaying a binary format in a human-readable text format is not really possible, here is what the generated [SPIR-V](www.khronos.org/spir/) looks when ran through the [SPIR-V Visualizer](https://www.khronos.org/spir/visualizer/)'s parser:
@@ -250,10 +245,8 @@ Label 50
 [67] OpFunctionEnd
 ```
 
-<br>
-
 ### Generated [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/):
-While nobody will ever need to translate a shader from one language to that same one, it is useful to allow this to test wether any data is lost during the cross compilation. As you can see, everything stays exactly the same:
+While nobody in the right mind will ever need to translate a shader from one language to that same one, it is useful to allow this to test wether any data is lost during the cross compilation. As you can see, everything stays exactly the same:
 ```glsl
 #version 450
 
@@ -273,17 +266,16 @@ void main()
 
 ## 🚫 Limitations
 
-<br>
-
-What ShaderConnect is trying to do is satisfy numerous APIs, some of which completely different from one another, and this is never possible without some compromises, unfortunately. Here are all currently known limitations:
+What [ShaderConnect](https://github.com/NikichaTV/ShaderConnect) is trying to do is seamlessly satisfy numerous APIs, some of which completely different from one another, but this is never possible without at least a few compromises, all of which are conveniently listed here:
 
 <br>
 
 - Input shader must be in either [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) or [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) format.
 - Version of [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) and [ESSL](https://www.khronos.org/files/opengles_shading_language.pdf) output shaders is 450.
 - The shader model version of [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) output shaders is 6.2.
-- [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) version of both macOS [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) and iOS [MSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) output shaders is 2.0.
+- [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) version of both macOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) and iOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) output shaders is 2.0.
 - Generated [SPIR-V](www.khronos.org/spir/) is in [SPIR-V](www.khronos.org/spir/) 1.4.
+- A method named "main" will get renamed to "main0" when compiling [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) (otherwise an error caused by confusion with the built-in main symbol may arise). 
 - Output channel count in fragment/pixel shader **must** match that of the corresponding render pass and/or pipeline it is used within.
 - You **must** use 32-bit (`uint32_t`) [index buffers](https://learn.microsoft.com/en-us/windows/uwp/graphics-concepts/index-buffers) with vertex shaders.
 - [Vulkan](https://www.vulkan.org) [push constants](https://docs.vulkan.org/guide/latest/push_constants.html) are converted to [uniform buffers](https://www.khronos.org/opengl/wiki/Uniform_Buffer_Object) in **all** output languages **except for** [SPIR-V](www.khronos.org/spir/) (where they remain unchanged) **and** [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) (where they are converted to [root constants](https://learn.microsoft.com/en-us/windows/win32/direct3d12/root-signatures)).
@@ -294,18 +286,14 @@ There are probably more, however, the project is still fairly new and has not be
 
 ## 🤓️ About
 
-<br>
-
 **Frameworks used:**
 
 * [Shaderc](https://github.com/google/shaderc/) - Used to compile input shader code to binary [SPIR-V](www.khronos.org/spir/).
 * [SPIR-V Cross](https://github.com/KhronosGroup/SPIRV-Cross/) - Translates [SPIR-V](www.khronos.org/spir/) data to a high-level shading language.
 
-<br>
-
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-<p align="center" id="LineCounter">Total lines of code: 1,486</p>
-<p align="center" id="LastUpdated">Last updated: 27/12/2023 </p>
+<p align="center" id="LineCounter">Total lines of code: 1,528</p>
+<p align="center" id="LastUpdated">Last updated: 05/01/2024 </p>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

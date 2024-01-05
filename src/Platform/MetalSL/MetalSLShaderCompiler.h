@@ -9,27 +9,26 @@
 namespace ShaderConnect
 {
 
-    enum class GLSLTargetPlatform : bool
+    enum class MetalSLTargetPlatform : bool
     {
-        GLSL,
-        ESSL
+        macOS,
+        iOS
     };
 
-
-    class GLSLShaderCompiler final : public ShaderCompiler
+    class MetalSLShaderCompiler final : public ShaderCompiler
     {
     public:
         /* --- CONSTRUCTORS --- */
-        inline explicit GLSLShaderCompiler(const GLSLTargetPlatform targetPlatform) : targetPlatform(targetPlatform) { }
+        inline explicit MetalSLShaderCompiler(const MetalSLTargetPlatform targetPlatform) : targetPlatform(targetPlatform) { }
 
         /* --- POLLING METHODS --- */
         std::filesystem::path CompileShader(const std::vector<uint32> &spirvBuffer, const std::filesystem::path &outputShaderDirectory);
 
         /* --- DESTRUCTOR --- */
-        ~GLSLShaderCompiler() = default;
+        ~MetalSLShaderCompiler() = default;
 
     private:
-        GLSLTargetPlatform targetPlatform = GLSLTargetPlatform::GLSL;
+        MetalSLTargetPlatform targetPlatform = MetalSLTargetPlatform::macOS;
 
     };
 
