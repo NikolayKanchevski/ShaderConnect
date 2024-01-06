@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.14)
 project(ShaderConnect)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -22,6 +22,9 @@ add_executable(${PROJECT_NAME}
 
     src/Platform/HLSL/HLSLShaderCompiler.cpp
     src/Platform/HLSL/HLSLShaderCompiler.h
+
+    src/Platform/HLSL/DXILShaderCompiler.cpp
+    src/Platform/HLSL/DXILShaderCompiler.h
 
     src/Platform/MetalSL/MetalSLShaderCompiler.cpp
     src/Platform/MetalSL/MetalSLShaderCompiler.h
@@ -53,6 +56,20 @@ set(SPIRV_CROSS_ENABLE_C_API OFF)
 add_subdirectory(vendor/SPIRV-Cross)
 target_link_libraries(${PROJECT_NAME} PRIVATE spirv-cross-cpp spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl)
 target_include_directories(${PROJECT_NAME} PRIVATE vendor/SPIRV-Cross)
+
+# Link DXC
+if(WIN32)
+    set(PICO_ENABLE_CXX_EXCEPTIONS 1)
+    set(DXC_DIRECTORY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/vendor/dxc")
+    target_include_directories(${PROJECT_NAME} PRIVATE "${DXC_DIRECTORY_PATH}/include")
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")
+        target_link_libraries(${PROJECT_NAME} PRIVATE "${DXC_DIRECTORY_PATH}/lib/arm64/dxcompiler.lib")
+    elseif(${CMAKE_SIZEOF_VOID_P} EQUAL 4)
+        target_link_libraries(${PROJECT_NAME} PRIVATE "${DXC_DIRECTORY_PATH}/lib/x86/dxcompiler.lib")
+    elseif(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+        target_link_libraries(${PROJECT_NAME} PRIVATE "${DXC_DIRECTORY_PATH}/lib/x64/dxcompiler.lib")
+    endif()
+endif()
 
 # Link precompiled headers
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/scpch.h)

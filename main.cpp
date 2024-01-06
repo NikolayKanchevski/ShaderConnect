@@ -4,7 +4,7 @@ int32 main(const int32 argumentCount, const char* arguments[])
 {
     // Validate argument count
     using namespace ShaderConnect;
-    if (argumentCount != 6) throw std::runtime_error("Usage: <input_shader_file_path> <input_shader_language['glsl' or 'hlsl']> <input_shader_type['vertex', 'fragment' or 'compute']> <output_shader_directory_path> <output_shader_language['glsl', 'essl', 'hlsl', 'macos-metalsl', 'ios-metalsl', 'macos-metallib', 'ios-metallib', 'ios-simulator-metallib' or 'spir-v']>!");
+    if (argumentCount != 6) throw std::runtime_error("Usage: <input_shader_file_path> <input_shader_language['glsl' or 'hlsl']> <input_shader_type['vertex', 'fragment' or 'compute']> <output_shader_directory_path> <output_shader_language['glsl', 'essl', 'hlsl', 'dxil', 'macos-metalsl', 'ios-metalsl', 'macos-metallib', 'ios-metallib', 'ios-simulator-metallib' or 'spir-v']>!");
 
     // Validate shader file path
     const std::filesystem::path inputShaderFilePath = arguments[1];

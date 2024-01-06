@@ -13,6 +13,9 @@ namespace ShaderConnect
 
     std::filesystem::path MetalLibShaderCompiler::CompileShader(const std::filesystem::path &inputMetalShaderFilePath, const std::filesystem::path &outputShaderDirectory)
     {
+        #if !SC_PLATFORM_macOS
+            throw std::runtime_error("Cannot cross-compile shaders into Metal libraries (.metallib), unless host is running macOS!");
+        #endif
         if (!File::FileExists(inputMetalShaderFilePath)) throw std::runtime_error("Cannot compile Metal shader [" + inputMetalShaderFilePath.string() + "] into a Metal library, as it does not exist!");
 
         // Choose SDK

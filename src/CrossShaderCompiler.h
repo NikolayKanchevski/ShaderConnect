@@ -38,10 +38,10 @@ namespace ShaderConnect
             explicit Includer(std::filesystem::path filePath);
 
             /* --- GETTER METHODS --- */
-            [[nodiscard]] shaderc_include_result* GetInclude(const char* requestedSource, shaderc_include_type type, const char* requestingSource, unsigned long includeDepth);
+            [[nodiscard]] shaderc_include_result* GetInclude(const char* requestedSource, shaderc_include_type type, const char* requestingSource, size_t includeDepth) override;
 
             /* --- DESTRUCTOR --- */
-            void ReleaseInclude(shaderc_include_result* data);
+            void ReleaseInclude(shaderc_include_result* data) override;
 
         private:
             std::filesystem::path filePath;

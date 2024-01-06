@@ -1,6 +1,6 @@
 # Shader Connect
 
-Shader Connect is a lightweight [C++17](https://en.cppreference.com/w/cpp/17) command-line tool, aimed at seamlessly converting [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) shader code to highly-optimized [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)/[MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)/[MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc)/[SPIR-V](www.khronos.org/spir/). It is supported on **Windows**, **macOS** and **Linux**, and can produce shaders,
+Shader Connect is a lightweight [C++17](https://en.cppreference.com/w/cpp/17) command-line tool, aimed at seamlessly converting [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) shader code to highly-optimized [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)/[DXIL](https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/DXIL.rst)/[MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)/[MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc)/[SPIR-V](www.khronos.org/spir/). It is supported on **Windows**, **macOS** and **Linux**, and can produce shaders,
 which are compatible with any operating system, as long as their corresponding graphics API has support for them. 
 
 ## 🧰 Usage
@@ -10,7 +10,7 @@ Once you have the compiled binary (either after you have built it yourself or do
 The arguments it takes in are as such, respectively:
 * `<input_shader_file_path>` - absolute path to the input shader file (it does not have to be of a specific extension, as you manually specify its language) 
 * `<input_shader_language>` - language of the input shader file. Can be one of the following:
-  * `glsl` [for [OpenGL](https://www.khronos.org/opengl/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)]
+  * `glsl` [for [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)]
   * `hlsl` [for [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)])
 * `<input_shader_type>` - what [type/stage](https://www.khronos.org/opengl/wiki/Shader#Stages) the input shader is of. Can be one of the following: 
   * `vertex`
@@ -22,11 +22,12 @@ The arguments it takes in are as such, respectively:
   * `glsl` [for [OpenGL](https://www.khronos.org/opengl/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) source]
   * `essl` [[OpenGLES](https://www.khronos.org/opengles/) [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) source]
   * `hlsl` [for [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) source file]
+  * `dxil` [for [DirectX](https://developer.nvidia.com/directx) [DXIL](https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/DXIL.rst) binary file, *supported on Windows only*, requires [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) to be installed]
   * `macos-metalsl` [for macOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) source file]
   * `ios-metalsl` [for iOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)] source file)
-  * `macos-metallib` [for macOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary, *supported on macOS only*)
-  * `ios-metallib` [for iOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary, *supported on macOS only*)
-  * `ios-simulator-metallib` [for iOS simulator ([Xcode](https://developer.apple.com/xcode/)'s emulator) [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary, *supported on macOS only*)
+  * `macos-metallib` [for macOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only* requires [Xcode](https://developer.apple.com/xcode/resources/) to be installed)
+  * `ios-metallib` [for iOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only* requires [Xcode](https://developer.apple.com/xcode/resources/) to be installed)
+  * `ios-simulator-metallib` [for iOS simulator ([Xcode](https://developer.apple.com/xcode/)'s emulator) [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only*)
 
 <br>
 
@@ -272,9 +273,10 @@ What [ShaderConnect](https://github.com/NikichaTV/ShaderConnect) is trying to do
 
 - Input shader must be in either [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) or [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) format.
 - Version of [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) and [ESSL](https://www.khronos.org/files/opengles_shading_language.pdf) output shaders is 450.
-- The shader model version of [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) output shaders is 6.2.
+- The shader model version of [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) and [DXIL](https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/DXIL.rst) output shaders is 6.6.
 - [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) version of both macOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) and iOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) output shaders is 2.0.
 - Generated [SPIR-V](www.khronos.org/spir/) is in [SPIR-V](www.khronos.org/spir/) 1.4.
+- If your target language allows custom entry point name, it must always be called "main".
 - A method named "main" will get renamed to "main0" when compiling [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) (otherwise an error caused by confusion with the built-in main symbol may arise). 
 - Output channel count in fragment/pixel shader **must** match that of the corresponding render pass and/or pipeline it is used within.
 - You **must** use 32-bit (`uint32_t`) [index buffers](https://learn.microsoft.com/en-us/windows/uwp/graphics-concepts/index-buffers) with vertex shaders.
@@ -290,10 +292,11 @@ There are probably more, however, the project is still fairly new and has not be
 
 * [Shaderc](https://github.com/google/shaderc/) - Used to compile input shader code to binary [SPIR-V](www.khronos.org/spir/).
 * [SPIR-V Cross](https://github.com/KhronosGroup/SPIRV-Cross/) - Translates [SPIR-V](www.khronos.org/spir/) data to a high-level shading language.
+* [DXC](https://github.com/microsoft/DirectXShaderCompiler/) - Official [DirectX](https://developer.nvidia.com/directx/) compiler for [DXIL](https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/DXIL.rst).
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-<p align="center" id="LineCounter">Total lines of code: 1,528</p>
-<p align="center" id="LastUpdated">Last updated: 05/01/2024 </p>
+<p align="center" id="LineCounter">Total lines of code: 1,674</p>
+<p align="center" id="LastUpdated">Last updated: 06/01/2024 </p>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

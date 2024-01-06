@@ -16,7 +16,7 @@ namespace ShaderConnect
         iOSSimulator
     };
 
-    class MetalLibShaderCompiler : public ShaderCompiler
+    class MetalLibShaderCompiler final : public ShaderCompiler
     {
     public:
         /* --- CONSTRUCTORS --- */

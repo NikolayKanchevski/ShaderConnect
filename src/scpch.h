@@ -9,16 +9,17 @@
 #if defined(__cplusplus)
     #pragma region Standard Library
         #include <cstdio>
+        #include <array>
         #include <vector>
         #include <cstring>
         #include <fstream>
         #include <exception>
         #include <filesystem>
+        #include <memory>
     #pragma endregion
 
     #pragma region Platform Detection
         #define SC_PLATFORM_WINDOWS 0
-        #define SC_PLATFORM_LINUX 0
         #define SC_PLATFORM_macOS 0
         #if _WIN32 || _WIN64
             #undef SC_PLATFORM_WINDOWS
@@ -26,9 +27,6 @@
         #elif __APPLE__ || __MACH__
             #undef SC_PLATFORM_macOS
             #define SC_PLATFORM_macOS 1
-        #elif __linux__
-            #undef SC_PLATFORM_LINUX
-            #define SC_PLATFORM_LINUX 1
         #endif
     #pragma endregion
 

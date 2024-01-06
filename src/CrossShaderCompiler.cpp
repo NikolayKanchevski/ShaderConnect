@@ -6,6 +6,7 @@
 
 #include "Platform/GLSL/GLSLShaderCompiler.h"
 #include "Platform/HLSL/HLSLShaderCompiler.h"
+#include "Platform/HLSL/DXILShaderCompiler.h"
 #include "Platform/MetalSL/MetalSLShaderCompiler.h"
 #include "Platform/MetalSL/MetalLibShaderCompiler.h"
 #include "Platform/SPIR-V/SPIRVShaderCompiler.h"
@@ -52,7 +53,7 @@ namespace ShaderConnect
 
         // Compile shader
         const std::vector<char> inputShaderBuffer = File::ReadFile(inputShaderFilePath);
-        const shaderc::SpvCompilationResult spirvResult = compiler.CompileGlslToSpv(inputShaderBuffer.data(), inputShaderBuffer.size(), shaderKind, inputShaderFilePath.stem().c_str(), compileOptions);
+        const shaderc::SpvCompilationResult spirvResult = compiler.CompileGlslToSpv(inputShaderBuffer.data(), inputShaderBuffer.size(), shaderKind, inputShaderFilePath.stem().string().c_str(), compileOptions);
         if (spirvResult.GetCompilationStatus() != shaderc_compilation_status_success)
         {
             printf("An error occurred during SPIR-V generation of shader [%s]: %s\n", inputShaderFilePath.filename().string().c_str(), spirvResult.GetErrorMessage().c_str());
@@ -90,6 +91,12 @@ namespace ShaderConnect
                 outputShaderFilePath = HLSLShaderCompiler().CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 break;
             }
+            case OutputShaderLanguage::DXIL:
+            {
+                outputShaderFilePath = HLSLShaderCompiler().CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
+                outputShaderFilePath = DXILShaderCompiler(inputShaderType).CompileShader(outputShaderFilePath, outputShaderDirectory);
+                break;
+            }
             case OutputShaderLanguage::macOSMetalSL:
             {
                 outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::macOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
@@ -102,27 +109,18 @@ namespace ShaderConnect
             }
             case OutputShaderLanguage::macOSMetalLib:
             {
-                #if !SC_PLATFORM_macOS
-                    throw std::runtime_error("Cannot cross-compile shaders into Metal libraries (.metallib), unless you are on macOS!");
-                #endif
                 outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::macOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 outputShaderFilePath = MetalLibShaderCompiler(MetalLibTargetPlatform::macOS).CompileShader(outputShaderFilePath, outputShaderDirectory);
                 break;
             }
             case OutputShaderLanguage::iOSMetalLib:
             {
-                #if !SC_PLATFORM_macOS
-                    throw std::runtime_error("Cannot cross-compile shaders into Metal libraries (.metallib), unless you are on macOS!");
-                #endif
                 outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::iOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 outputShaderFilePath = MetalLibShaderCompiler(MetalLibTargetPlatform::iOS).CompileShader(outputShaderFilePath, outputShaderDirectory);
                 break;
             }
             case OutputShaderLanguage::iOSSimulatorMetalLib:
             {
-                #if !SC_PLATFORM_macOS
-                    throw std::runtime_error("Cannot cross-compile shaders into Metal libraries (.metallib), unless you are on macOS!");
-                #endif
                 outputShaderFilePath = MetalSLShaderCompiler(MetalSLTargetPlatform::iOS).CompileShader(inputShaderSpirvBuffer, outputShaderDirectory);
                 outputShaderFilePath = MetalLibShaderCompiler(MetalLibTargetPlatform::iOSSimulator).CompileShader(outputShaderFilePath, outputShaderDirectory);
                 break;
@@ -147,7 +145,7 @@ namespace ShaderConnect
 
     /* --- GETTER METHODS --- */
 
-    shaderc_include_result* CrossShaderCompiler::Includer::GetInclude(const char* requestedSource, const shaderc_include_type type, const char* requestingSource, const unsigned long includeDepth)
+    shaderc_include_result* CrossShaderCompiler::Includer::GetInclude(const char* requestedSource, const shaderc_include_type type, const char* requestingSource, const size_t includeDepth)
     {
         // Read included shader data
         auto includeShaderBuffer = File::ReadFile(filePath.parent_path() / requestedSource);

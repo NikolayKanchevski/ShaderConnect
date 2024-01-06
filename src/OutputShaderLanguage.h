@@ -13,6 +13,7 @@ namespace ShaderConnect
         GLSL,
         ESSL,
         HLSL,
+        DXIL,
         macOSMetalSL,
         iOSMetalSL,
         macOSMetalLib,
@@ -26,6 +27,7 @@ namespace ShaderConnect
         if (strcmp(string, "glsl") == 0)                        return OutputShaderLanguage::GLSL;
         if (strcmp(string, "essl") == 0)                        return OutputShaderLanguage::ESSL;
         if (strcmp(string, "hlsl") == 0)                        return OutputShaderLanguage::HLSL;
+        if (strcmp(string, "dxil") == 0)                        return OutputShaderLanguage::DXIL;
         if (strcmp(string, "macos-metalsl") == 0)               return OutputShaderLanguage::macOSMetalSL;
         if (strcmp(string, "ios-metalsl") == 0)                 return OutputShaderLanguage::iOSMetalSL;
         if (strcmp(string, "macos-metallib") == 0)              return OutputShaderLanguage::macOSMetalLib;

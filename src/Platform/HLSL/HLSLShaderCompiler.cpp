@@ -15,7 +15,7 @@ namespace ShaderConnect
     {
         // Set up compiler options
         spirv_cross::CompilerHLSL::Options options = { };
-        options.shader_model = 62;
+        options.shader_model = 66;
         options.point_coord_compat = false;
         options.support_nonzero_base_vertex_base_instance = false;
         options.force_storage_buffer_as_uav = false;
