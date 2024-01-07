@@ -47,12 +47,10 @@ namespace ShaderConnect
 
         // Create intermediate binary
         const std::string intermediateCommand = "xcrun -sdk " + sdkName + " metal -c " + inputMetalShaderFilePath.string() + " -o " + airFilePath.string();
-        printf("%s", intermediateCommand.c_str());
         system(intermediateCommand.c_str());
 
         // Compile binary to Metal library
         const std::string compileCommand = "xcrun -sdk " + sdkName + " metallib " + airFilePath.string() + " -o " + outputShaderFilePath.string();
-        printf("%s", compileCommand.c_str());
         system(compileCommand.c_str());
 
         // Delete temporary files
