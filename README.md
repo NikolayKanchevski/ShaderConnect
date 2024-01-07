@@ -25,9 +25,9 @@ The arguments it takes in are as such, respectively:
   * `dxil` [for [DirectX](https://developer.nvidia.com/directx) [DXIL](https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/DXIL.rst) binary file, *supported on Windows only*, requires [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) to be installed]
   * `macos-metalsl` [for macOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) source file]
   * `ios-metalsl` [for iOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)] source file)
-  * `macos-metallib` [for macOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only* requires [Xcode](https://developer.apple.com/xcode/resources/) to be installed)
-  * `ios-metallib` [for iOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only* requires [Xcode](https://developer.apple.com/xcode/resources/) to be installed)
-  * `ios-simulator-metallib` [for iOS simulator ([Xcode](https://developer.apple.com/xcode/)'s emulator) [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only*)
+  * `macos-metallib` [for macOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only*, requires [Xcode](https://developer.apple.com/xcode/resources/) to be installed)
+  * `ios-metallib` [for iOS [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only*, requires [Xcode](https://developer.apple.com/xcode/resources/) to be installed)
+  * `ios-simulator-metallib` [for iOS simulator ([Xcode](https://developer.apple.com/xcode/)'s emulator) [MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc) binary file, *supported on macOS only*, requires [Xcode](https://developer.apple.com/xcode/resources/) to be installed)
 
 <br>
 
@@ -36,7 +36,7 @@ The arguments it takes in are as such, respectively:
 $ ShaderConnect.exe C:\Users\MyUser\Shaders\input_shader.vert glsl vertex C:\Users\MyUser\Shaders\Generated\ spir-v   
 ```
 
-After running the command, if all the arguments are valid, you are going to see a new shader file in the specified`<output_shader_directory_path>` directory. 
+After running the command, if all the arguments are valid, you are going to see a new shader file in the specified `<output_shader_directory_path>` directory. 
 
 <br>
 
@@ -164,7 +164,7 @@ vertex main0_out main0(uint gl_VertexIndex [[vertex_id]])
     return out;
 }
 ```
-In this case both the iOS and macOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) are identical, but, just like with [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf), if iOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) lacks some feature present in the macOS version, it will be emulated with another core features where possible.
+In this case both the iOS and macOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) are identical, but, just like with [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf), if iOS [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) lacks some feature present in the macOS version, it will be emulated with another core feature where possible.
 Specifying the correct target platform also allows for better optimization.
 
 ### Generated [SPIR-V](www.khronos.org/spir/)
@@ -296,7 +296,7 @@ There are probably more, however, the project is still fairly new and has not be
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-<p align="center" id="LineCounter">Total lines of code: 1,674</p>
+<p align="center" id="LineCounter">Total lines of code: 1,672</p>
 <p align="center" id="LastUpdated">Last updated: 07/01/2024 </p>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
