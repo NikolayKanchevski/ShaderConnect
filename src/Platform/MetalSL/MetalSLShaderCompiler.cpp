@@ -59,8 +59,8 @@ namespace ShaderConnect
         options.view_index_from_device_index = false;
         options.dispatch_base = false;
         options.texture_1D_as_2D = false;
-        options.argument_buffers = false;
-        options.argument_buffers_tier = spirv_cross::CompilerMSL::Options::ArgumentBuffersTier::Tier1;
+        options.argument_buffers = true;
+        options.argument_buffers_tier = spirv_cross::CompilerMSL::Options::ArgumentBuffersTier::Tier2;
         options.runtime_array_rich_descriptor = false;
         options.enable_base_index_zero = false;
         options.pad_fragment_output_components = false;
@@ -70,9 +70,9 @@ namespace ShaderConnect
         options.emulate_cube_array = true;
         options.enable_decoration_binding = false;
         options.texture_buffer_native = false;
-        options.force_active_argument_buffer_resources = false;
-        options.pad_argument_buffer_resources = false;
-        options.force_native_arrays = true;
+        options.force_active_argument_buffer_resources = true;
+        options.pad_argument_buffer_resources = true;
+        options.force_native_arrays = false;
         options.enable_clip_distance_user_varying = true;
         options.multi_patch_workgroup = false;
         options.raw_buffer_tese_input = false;
@@ -94,6 +94,103 @@ namespace ShaderConnect
         spirv_cross::CompilerMSL compiler(spirvBuffer);
         compiler.set_msl_options(options);
 
+        constexpr uint32 UNIFORM_BUFFER_BINDING         = 0;
+        constexpr uint32 STORAGE_BUFFER_BINDING         = 1;
+        constexpr uint32 SAMPLED_IMAGE_BINDING          = 2;
+        constexpr uint32 SAMPLED_CUBEMAP_BINDING        = 3;
+        constexpr uint32 STORAGE_IMAGE_BINDING          = 4;
+        constexpr uint32 STORAGE_CUBEMAP_BINDING        = 5;
+        constexpr uint32 SAMPLER_BINDING                = 6;
+
+        /* === Reference: https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf === */
+        constexpr static uint32 UNIFORM_BUFFER_CAPACITY         = 500'000;
+        constexpr static uint32 STORAGE_BUFFER_CAPACITY         = 500'000;
+        constexpr static uint32 SAMPLED_IMAGE_CAPACITY          = 250'000;
+        constexpr static uint32 SAMPLED_CUBEMAP_CAPACITY        = 250'000;
+        constexpr static uint32 STORAGE_IMAGE_CAPACITY          = 250'000;
+        constexpr static uint32 STORAGE_CUBEMAP_CAPACITY        = 250'000;
+        constexpr static uint32 SAMPLER_CAPACITY                = 1024;
+
+        // Define bindless layout (NOTE: for some reason SPIRV-Cross' padding breaks unless capacity is split into chunks of multiples of 250'000)
+        constexpr std::array<spirv_cross::MSLResourceBinding, 9> BINDINGS
+        {
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::Void,
+                .desc_set = 0,
+                .binding = UNIFORM_BUFFER_BINDING,
+                .count = UNIFORM_BUFFER_CAPACITY / 2
+            },
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::Void,
+                .desc_set = 0,
+                .binding = UNIFORM_BUFFER_BINDING,
+                .count = UNIFORM_BUFFER_CAPACITY / 2
+            },
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::Void,
+                .desc_set = 0,
+                .binding = STORAGE_BUFFER_BINDING,
+                .count = STORAGE_BUFFER_CAPACITY / 2
+            },
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::Void,
+                .desc_set = 0,
+                .binding = STORAGE_BUFFER_BINDING,
+                .count = STORAGE_BUFFER_CAPACITY / 2
+            },
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::SampledImage,
+                .desc_set = 0,
+                .binding = SAMPLED_IMAGE_BINDING,
+                .count = SAMPLED_IMAGE_CAPACITY
+            },
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::SampledImage,
+                .desc_set = 0,
+                .binding = SAMPLED_CUBEMAP_BINDING,
+                .count = SAMPLED_CUBEMAP_CAPACITY
+            },
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::Image,
+                .desc_set = 0,
+                .binding = STORAGE_IMAGE_BINDING,
+                .count = STORAGE_IMAGE_CAPACITY
+            },
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::Image,
+                .desc_set = 0,
+                .binding = STORAGE_CUBEMAP_BINDING,
+                .count = STORAGE_CUBEMAP_CAPACITY
+            },
+            spirv_cross::MSLResourceBinding {
+                .basetype = spirv_cross::SPIRType::Sampler,
+                .desc_set = 0,
+                .binding = SAMPLER_BINDING,
+                .count = SAMPLER_CAPACITY
+            }
+        };
+
+        // Add bindings to every shader type
+        uint32 currentIndex = 0;
+        compiler.set_argument_buffer_device_address_space(0, true);
+        for (spirv_cross::MSLResourceBinding binding : BINDINGS)
+        {
+            binding.msl_buffer = currentIndex;
+            binding.msl_texture = currentIndex;
+            binding.msl_sampler = currentIndex;
+
+            binding.stage = spv::ExecutionModelVertex;
+            compiler.add_msl_resource_binding(binding);
+
+            binding.stage = spv::ExecutionModelFragment;
+            compiler.add_msl_resource_binding(binding);
+
+            binding.stage = spv::ExecutionModelKernel;
+            compiler.add_msl_resource_binding(binding);
+
+            currentIndex += binding.count;
+        }
+        
         // Compile shader
         const std::string metalSLCode = compiler.compile();
         const std::filesystem::path outputShaderFilePath = outputShaderFileDirectory / (std::string("shader") + (targetPlatform == MetalSLTargetPlatform::macOS ? ".macos" : ".ios") + ".metal");

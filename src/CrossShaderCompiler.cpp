@@ -29,9 +29,11 @@ namespace ShaderConnect
         // Configure compile options
         #if !defined(NDEBUG)
             compileOptions.SetWarningsAsErrors();
+            compileOptions.SetGenerateDebugInfo();
         #endif
         compileOptions.SetIncluder(std::make_unique<Includer>(inputShaderFilePath));
         compileOptions.SetOptimizationLevel(shaderc_optimization_level_performance);
+        compileOptions.SetAutoMapLocations(true);
         switch (inputShaderLanguage)
         {
             case InputShaderLanguage::GLSL: { compileOptions.SetSourceLanguage(shaderc_source_language_glsl); compileOptions.SetForcedVersionProfile(450, shaderc_profile_none); break; }
