@@ -11,7 +11,8 @@
         #include <cstdio>
         #include <array>
         #include <vector>
-        #include <cstring>
+        #include <string>
+        #include <string_view>
         #include <fstream>
         #include <exception>
         #include <filesystem>

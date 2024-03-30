@@ -21,15 +21,15 @@ namespace ShaderConnect
         CrossShaderCompiler(InputShaderLanguage inputShaderLanguage, ShaderType inputShaderType, const std::filesystem::path &inputShaderFilePath);
 
         /* --- POLLING METHODS --- */
-        std::filesystem::path Compile(OutputShaderLanguage outputShaderLanguage, const std::filesystem::path &outputShaderDirectory) const;
+        std::filesystem::path Compile(OutputShaderLanguage outputShaderLanguage, const std::filesystem::path &outputShaderDirectory);
 
         /* --- DESTRUCTOR --- */
         ~CrossShaderCompiler() = default;
 
     private:
-        std::string inputShaderName;
-        std::vector<uint32> inputShaderSpirvBuffer;
-        ShaderType inputShaderType = ShaderType::Undefined;
+        const InputShaderLanguage inputShaderLanguage;
+        const ShaderType inputShaderType = ShaderType::Undefined;
+        const std::filesystem::path inputShaderFilePath;
 
         class Includer : public shaderc::CompileOptions::IncluderInterface
         {

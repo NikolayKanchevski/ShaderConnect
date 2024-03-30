@@ -26,6 +26,6 @@ int32 main(const int32 argumentCount, const char* arguments[])
     if (outputShaderLanguage == OutputShaderLanguage::Undefined) throw std::runtime_error("Unrecognized output shader language specified!");
 
     // Create compiler & compile shader
-    const CrossShaderCompiler compiler = CrossShaderCompiler(inputShaderLanguage, inputShaderType, inputShaderFilePath);
+    CrossShaderCompiler compiler = CrossShaderCompiler(inputShaderLanguage, inputShaderType, inputShaderFilePath);
     compiler.Compile(outputShaderLanguage, outputShaderFilePath);
 }

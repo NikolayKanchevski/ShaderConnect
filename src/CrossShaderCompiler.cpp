@@ -17,11 +17,16 @@ namespace ShaderConnect
     /* --- CONSTRUCTORS --- */
 
     CrossShaderCompiler::CrossShaderCompiler(const InputShaderLanguage inputShaderLanguage, const ShaderType inputShaderType, const std::filesystem::path &inputShaderFilePath)
-        : inputShaderName(inputShaderFilePath.stem().string()), inputShaderType(inputShaderType)
+        : inputShaderLanguage(inputShaderLanguage), inputShaderType(inputShaderType), inputShaderFilePath(inputShaderFilePath)
     {
         if (inputShaderLanguage == InputShaderLanguage::Undefined) throw std::runtime_error("Input shader's language must not be InputShaderLanguage::Undefined!");
         if (inputShaderType == ShaderType::Undefined) throw std::runtime_error("Input shader's type must not be ShaderType::Undefined");
+    }
 
+    /* --- POLLING METHODS --- */
+
+    std::filesystem::path CrossShaderCompiler::Compile(const OutputShaderLanguage outputShaderLanguage, const std::filesystem::path &outputShaderDirectory)
+    {
         // Create shaderc compiler and options
         const shaderc::Compiler compiler = { };
         shaderc::CompileOptions compileOptions = { };
@@ -29,8 +34,8 @@ namespace ShaderConnect
         // Configure compile options
         #if !defined(NDEBUG)
             compileOptions.SetWarningsAsErrors();
-            compileOptions.SetGenerateDebugInfo();
         #endif
+        if (outputShaderLanguage != OutputShaderLanguage::SPIRV) compileOptions.SetGenerateDebugInfo();
         compileOptions.SetIncluder(std::make_unique<Includer>(inputShaderFilePath));
         compileOptions.SetOptimizationLevel(shaderc_optimization_level_performance);
         compileOptions.SetAutoMapLocations(true);
@@ -38,7 +43,7 @@ namespace ShaderConnect
         {
             case InputShaderLanguage::GLSL: { compileOptions.SetSourceLanguage(shaderc_source_language_glsl); compileOptions.SetForcedVersionProfile(450, shaderc_profile_none); break; }
             case InputShaderLanguage::HLSL: { compileOptions.SetSourceLanguage(shaderc_source_language_hlsl); break; }
-            default: break;
+            default:                        break;
         }
         compileOptions.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3);
         compileOptions.SetTargetSpirv(shaderc_spirv_version_1_4);
@@ -50,7 +55,7 @@ namespace ShaderConnect
             case ShaderType::Vertex:   { shaderKind = shaderc_vertex_shader;   break; }
             case ShaderType::Fragment: { shaderKind = shaderc_fragment_shader; break; }
             case ShaderType::Compute:  { shaderKind = shaderc_compute_shader;  break; }
-            default: break;
+            default:                   break;
         }
 
         // Compile shader
@@ -63,20 +68,14 @@ namespace ShaderConnect
         }
 
         // Save SPIR-V data
-        inputShaderSpirvBuffer = { spirvResult.begin(), spirvResult.end() };
-    }
+        const std::vector<uint32> inputShaderSpirvBuffer = { spirvResult.begin(), spirvResult.end() };
 
-    /* --- POLLING METHODS --- */
-
-    std::filesystem::path CrossShaderCompiler::Compile(const OutputShaderLanguage outputShaderLanguage, const std::filesystem::path &outputShaderDirectory) const
-    {
         std::filesystem::path outputShaderFilePath;
         switch (outputShaderLanguage)
         {
             case OutputShaderLanguage::Undefined:
             {
                 throw std::runtime_error("Cannot cross compile shader into a OutputShaderLanguage::Undefined!");
-                break;
             }
             case OutputShaderLanguage::GLSL:
             {

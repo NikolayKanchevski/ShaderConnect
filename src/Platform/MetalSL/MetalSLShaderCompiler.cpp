@@ -190,9 +190,20 @@ namespace ShaderConnect
 
             currentIndex += binding.count;
         }
-        
+
         // Compile shader
-        const std::string metalSLCode = compiler.compile();
+        std::string metalSLCode = compiler.compile();
+
+        // If base buffer is found and is not an argument buffer, then it must be a push constant, so we manually set its index to 1, which is the one Sierra uses
+        if (size_t baseBufferIndex = metalSLCode.find("[[buffer(0)]]"); baseBufferIndex != std::string::npos)
+        {
+            const std::string_view baseBufferName = std::string_view(metalSLCode.data() + baseBufferIndex - 18, 17);
+            if (baseBufferName != "spvDescriptorSet0")
+            {
+                metalSLCode[baseBufferIndex + 9] = '1';
+            }
+        }
+
         const std::filesystem::path outputShaderFilePath = outputShaderFileDirectory / (std::string("shader") + (targetPlatform == MetalSLTargetPlatform::macOS ? ".macos" : ".ios") + ".metal");
         File::WriteToFile(outputShaderFilePath, metalSLCode.data(), metalSLCode.size() * sizeof(char), true, true);
 
