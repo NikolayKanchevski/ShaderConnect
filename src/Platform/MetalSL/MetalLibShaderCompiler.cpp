@@ -60,10 +60,4 @@ namespace ShaderConnect
         return outputShaderFilePath;
     }
 
-    /* --- SETTER METHODS --- */
-
-    /* --- GETTER METHODS --- */
-
-    /* --- DESTRUCTOR --- */
-
 }

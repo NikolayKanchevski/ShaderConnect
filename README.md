@@ -1,6 +1,6 @@
 # Shader Connect
 
-Shader Connect is a lightweight [C++17](https://en.cppreference.com/w/cpp/17) command-line tool, aimed at seamlessly converting [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) shader code to highly-optimized [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)/[DXIL](https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/DXIL.rst)/[MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)/[MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc)/[SPIR-V](www.khronos.org/spir/). It is supported on **Windows**, **macOS** and **Linux**, and can produce shaders,
+Shader Connect is a lightweight [C++20](https://en.cppreference.com/w/cpp/20) command-line tool, aimed at seamlessly converting [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/) shader code to highly-optimized [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/)/[ESSL](https://www.khronos.org/files/opengles_shading_language.pdf)/[HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)/[DXIL](https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/DXIL.rst)/[MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)/[MetalLib](https://developer.apple.com/documentation/metal/shader_libraries/generating_and_loading_a_metal_library_symbol_file?language=objc)/[SPIR-V](www.khronos.org/spir/). It is supported on **Windows**, **macOS** and **Linux**, and can produce shaders,
 which are compatible with any operating system, as long as their corresponding graphics API has support for them. 
 
 ## 🧰 Usage
@@ -296,7 +296,7 @@ There are probably more, however, the project is still fairly new and has not be
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-<p align="center" id="LineCounter">Total lines of code: 1,784</p>
-<p align="center" id="LastUpdated">Last updated: 30/03/2024 </p>
+<p align="center" id="LineCounter">Total lines of code: 1,809</p>
+<p align="center" id="LastUpdated">Last updated: 07/04/2024 </p>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
