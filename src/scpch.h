@@ -12,6 +12,7 @@
         #include <array>
         #include <vector>
         #include <string>
+        #include <cstring>
         #include <string_view>
         #include <fstream>
         #include <exception>
