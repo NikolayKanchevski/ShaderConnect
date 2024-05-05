@@ -28,7 +28,7 @@ namespace ShaderConnect
                 break;
             }
         }
-        options.msl_version = spirv_cross::CompilerMSL::Options::make_msl_version(2, 0);
+        options.msl_version = spirv_cross::CompilerMSL::Options::make_msl_version(3 , 0);
         options.texel_buffer_texture_width = 4096;
         options.r32ui_linear_texture_alignment = 4;
         options.r32ui_alignment_constant_id = 65535;
@@ -94,77 +94,49 @@ namespace ShaderConnect
         spirv_cross::CompilerMSL compiler(spirvBuffer);
         compiler.set_msl_options(options);
 
+        constexpr uint32 RESERVED_SET                   = 0;
         constexpr uint32 UNIFORM_BUFFER_BINDING         = 0;
         constexpr uint32 STORAGE_BUFFER_BINDING         = 1;
         constexpr uint32 SAMPLED_IMAGE_BINDING          = 2;
-        constexpr uint32 SAMPLED_CUBEMAP_BINDING        = 3;
-        constexpr uint32 STORAGE_IMAGE_BINDING          = 4;
-        constexpr uint32 STORAGE_CUBEMAP_BINDING        = 5;
-        constexpr uint32 SAMPLER_BINDING                = 6;
+        constexpr uint32 STORAGE_IMAGE_BINDING          = 3;
+        constexpr uint32 SAMPLER_BINDING                = 4;
 
         /* === Reference: https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf === */
         constexpr static uint32 UNIFORM_BUFFER_CAPACITY         = 500'000;
         constexpr static uint32 STORAGE_BUFFER_CAPACITY         = 500'000;
-        constexpr static uint32 SAMPLED_IMAGE_CAPACITY          = 250'000;
-        constexpr static uint32 SAMPLED_CUBEMAP_CAPACITY        = 250'000;
-        constexpr static uint32 STORAGE_IMAGE_CAPACITY          = 250'000;
-        constexpr static uint32 STORAGE_CUBEMAP_CAPACITY        = 250'000;
+        constexpr static uint32 SAMPLED_IMAGE_CAPACITY          = 500'000;
+        constexpr static uint32 STORAGE_IMAGE_CAPACITY          = 500'000;
         constexpr static uint32 SAMPLER_CAPACITY                = 1024;
 
-        // Define bindless layout (NOTE: for some reason SPIRV-Cross' padding breaks unless capacity is split into chunks of multiples of 250'000)
-        constexpr std::array<spirv_cross::MSLResourceBinding, 9> BINDINGS
+        constexpr std::array<spirv_cross::MSLResourceBinding, 5> BINDINGS
         {
             spirv_cross::MSLResourceBinding {
                 .basetype = spirv_cross::SPIRType::Void,
-                .desc_set = 0,
+                .desc_set = RESERVED_SET,
                 .binding = UNIFORM_BUFFER_BINDING,
-                .count = UNIFORM_BUFFER_CAPACITY / 2
+                .count = UNIFORM_BUFFER_CAPACITY
             },
             spirv_cross::MSLResourceBinding {
                 .basetype = spirv_cross::SPIRType::Void,
-                .desc_set = 0,
-                .binding = UNIFORM_BUFFER_BINDING,
-                .count = UNIFORM_BUFFER_CAPACITY / 2
-            },
-            spirv_cross::MSLResourceBinding {
-                .basetype = spirv_cross::SPIRType::Void,
-                .desc_set = 0,
+                .desc_set = RESERVED_SET,
                 .binding = STORAGE_BUFFER_BINDING,
-                .count = STORAGE_BUFFER_CAPACITY / 2
-            },
-            spirv_cross::MSLResourceBinding {
-                .basetype = spirv_cross::SPIRType::Void,
-                .desc_set = 0,
-                .binding = STORAGE_BUFFER_BINDING,
-                .count = STORAGE_BUFFER_CAPACITY / 2
+                .count = STORAGE_BUFFER_CAPACITY
             },
             spirv_cross::MSLResourceBinding {
                 .basetype = spirv_cross::SPIRType::SampledImage,
-                .desc_set = 0,
+                .desc_set = RESERVED_SET,
                 .binding = SAMPLED_IMAGE_BINDING,
                 .count = SAMPLED_IMAGE_CAPACITY
             },
             spirv_cross::MSLResourceBinding {
-                .basetype = spirv_cross::SPIRType::SampledImage,
-                .desc_set = 0,
-                .binding = SAMPLED_CUBEMAP_BINDING,
-                .count = SAMPLED_CUBEMAP_CAPACITY
-            },
-            spirv_cross::MSLResourceBinding {
                 .basetype = spirv_cross::SPIRType::Image,
-                .desc_set = 0,
+                .desc_set = RESERVED_SET,
                 .binding = STORAGE_IMAGE_BINDING,
                 .count = STORAGE_IMAGE_CAPACITY
             },
             spirv_cross::MSLResourceBinding {
-                .basetype = spirv_cross::SPIRType::Image,
-                .desc_set = 0,
-                .binding = STORAGE_CUBEMAP_BINDING,
-                .count = STORAGE_CUBEMAP_CAPACITY
-            },
-            spirv_cross::MSLResourceBinding {
                 .basetype = spirv_cross::SPIRType::Sampler,
-                .desc_set = 0,
+                .desc_set = RESERVED_SET,
                 .binding = SAMPLER_BINDING,
                 .count = SAMPLER_CAPACITY
             }
