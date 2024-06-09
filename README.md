@@ -5,7 +5,7 @@ which are compatible with any operating system, as long as their corresponding g
 
 ## 🧰 Usage
 
-Once you have the compiled binary (either after you have built it yourself or downloaded it from [GitHub](https://github.com/NikichaTV/ShaderConnect)), you can run it just as any other command-line application.
+Once you have the compiled binary (either after you have built it yourself or downloaded it from [GitHub](https://github.com/NikolayKanchevski/ShaderConnect)), you can run it just as any other command-line application.
 
 The arguments it takes in are as such, respectively:
 * `<input_shader_file_path>` - absolute path to the input shader file (it does not have to be of a specific extension, as you manually specify its language) 
@@ -43,7 +43,7 @@ After running the command, if all the arguments are valid, you are going to see 
 ## 🤔 ShaderConnect
 
 #### Why was  it developed?
-Being the lead developer of the [Sierra Engine](https://github.com/NikichaTV/SierraEngine) (a cross-platform *multi-API* rendering engine), I quickly found myself needing to write numerous versions of every shader I had
+Being the lead developer of the [Sierra Engine](https://github.com/NikolayKanchevski/SierraEngine) (a cross-platform *multi-API* rendering engine), I quickly found myself needing to write numerous versions of every shader I had
 just to satisfy the requirements of the various graphics APIs the engine was built to seamlessly support. For example, [Vulkan](https://www.vulkan.org) works with [SPIR-V](www.khronos.org/spir/) binary shaders, [DirectX](https://developer.nvidia.com/directx) uses intermediate format shaders (compiled from [HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl/)), [Metal](https://developer.apple.com/metal/) needs C++-like [MetalSL](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)
 text shaders, which are ultimately compiled down to binary, and [OpenGL](https://www.khronos.org/opengl/) uses plain [GLSL](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)/) text shaders.
 
@@ -267,7 +267,7 @@ void main()
 
 ## 🚫 Limitations
 
-What [ShaderConnect](https://github.com/NikichaTV/ShaderConnect) is trying to do is seamlessly satisfy numerous APIs, some of which completely different from one another, but this is never possible without at least a few compromises, all of which are conveniently listed here:
+What [ShaderConnect](https://github.com/NikolayKanchevski/ShaderConnect) is trying to do is seamlessly satisfy numerous APIs, some of which completely different from one another, but this is never possible without at least a few compromises, all of which are conveniently listed here:
 
 <br>
 
