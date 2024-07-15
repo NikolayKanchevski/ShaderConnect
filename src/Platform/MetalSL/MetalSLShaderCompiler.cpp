@@ -102,10 +102,10 @@ namespace ShaderConnect
         constexpr uint32 SAMPLER_BINDING                = 4;
 
         /* === Reference: https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf === */
-        constexpr static uint32 UNIFORM_BUFFER_CAPACITY         = 500'000;
-        constexpr static uint32 STORAGE_BUFFER_CAPACITY         = 500'000;
-        constexpr static uint32 SAMPLED_IMAGE_CAPACITY          = 500'000;
-        constexpr static uint32 STORAGE_IMAGE_CAPACITY          = 500'000;
+        constexpr static uint32 UNIFORM_BUFFER_CAPACITY         = 8192;
+        constexpr static uint32 STORAGE_BUFFER_CAPACITY         = 8192;
+        constexpr static uint32 SAMPLED_IMAGE_CAPACITY          = 8192;
+        constexpr static uint32 STORAGE_IMAGE_CAPACITY          = 8192;
         constexpr static uint32 SAMPLER_CAPACITY                = 1024;
 
         constexpr std::array<spirv_cross::MSLResourceBinding, 5> BINDINGS

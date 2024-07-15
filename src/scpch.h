@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include <cstdint>
 
 #if defined(__cplusplus)
     #pragma region Standard Library
         #include <cstdio>
+        #include <cstdint>
         #include <array>
         #include <vector>
         #include <string>
