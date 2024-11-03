@@ -42,7 +42,11 @@ namespace ShaderConnect
 
     std::vector<char> File::ReadFile(const std::filesystem::path &filePath)
     {
-        if (!FileExists(filePath)) throw std::runtime_error("Could not open file for reading, as it does not exist!");
+        if (!FileExists(filePath))
+        {
+            std::error_code errorCode = { };
+            throw std::filesystem::filesystem_error("Could not open file for reading, as it does not exist!", filePath, errorCode);
+        }
 
         // Try to create a stream to read file
         std::ifstream file(filePath, std::ios::binary | std::ios::ate);
